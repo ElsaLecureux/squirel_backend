@@ -21,9 +21,12 @@
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/typeorm": "^10.0.2",
+    "pg": "^8.13.0",
+    "postgres": "^3.4.4",
     "postgresql": "^0.0.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
