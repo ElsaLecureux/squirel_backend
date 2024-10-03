@@ -25,6 +25,7 @@ import { UsersModule } from './users/users.module';
         controllers: [UsersController],
         providers: [UsersService],
         autoLoadEntities: true,
+        dropSchema: true,
         synchronize: true,
       }),
     }),

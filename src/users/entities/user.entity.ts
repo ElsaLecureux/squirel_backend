@@ -1,4 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
+import { Exclude } from 'class-transformer';
+
+// eslint-disable-next-line prettier/prettier
+const regexPassword = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
 @Entity()
 export class User {
@@ -6,17 +18,24 @@ export class User {
   id: number;
 
   @Column()
+  @IsString()
   username: string;
 
   @Column()
+  @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @Column()
+  @IsString()
+  @IsNotEmpty()
+  @Exclude()
+  @Matches(regexPassword)
   password: string;
 
-  @Column()
-  created_at: string;
+  @CreateDateColumn()
+  created_at: Date;
 
-  @Column()
-  updated_at: string;
+  @UpdateDateColumn()
+  updated_at: Date;
 }
