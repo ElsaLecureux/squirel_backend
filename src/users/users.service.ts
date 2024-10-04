@@ -11,7 +11,7 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async getUser(id: number): Promise<User> {
+  async getUser(id: number): Promise<UserDto> {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) {
       throw new NotFoundException();
@@ -19,13 +19,15 @@ export class UsersService {
     return user;
   }
 
-  async createUser(userDto: UserDto): Promise<User> {
+  async createUser(userDto: UserDto): Promise<UserDto> {
     const user = this.usersRepository.create({
       username: userDto.username,
       email: userDto.email,
       password: userDto.password,
     });
-    return await this.usersRepository.save(user);
+    const userCreated = await this.usersRepository.save(user);
+    delete userCreated.password;
+    return userCreated;
   }
 
   async updateUser(id: number, userDto: UserDto): Promise<UserDto> {
@@ -36,7 +38,9 @@ export class UsersService {
     user.username = userDto.username;
     user.email = userDto.email;
     user.password = userDto.password;
-    return await this.usersRepository.save(user);
+    const userUpdated = await this.usersRepository.save(user);
+    delete userUpdated.password;
+    return userUpdated;
   }
 
   async deleteUser(id: number): Promise<void> {
