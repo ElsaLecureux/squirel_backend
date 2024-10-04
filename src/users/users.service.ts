@@ -8,53 +8,41 @@ import { UserDto } from './user.dto';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private readonly usersRepository: Repository<User>,
   ) {}
-
-  async createUser(userDto: UserDto): Promise<User> {
-    try {
-      const user = await this.usersRepository.create({
-        username: userDto.username,
-        email: userDto.email,
-        password: userDto.password,
-      });
-      return await this.usersRepository.save(user);
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
-  }
 
   async getUser(id: number): Promise<User> {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException();
     }
-
     return user;
+  }
+
+  async createUser(userDto: UserDto): Promise<User> {
+    const user = this.usersRepository.create({
+      username: userDto.username,
+      email: userDto.email,
+      password: userDto.password,
+    });
+    return await this.usersRepository.save(user);
   }
 
   async updateUser(id: number, userDto: UserDto): Promise<UserDto> {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException();
     }
     user.username = userDto.username;
     user.email = userDto.email;
     user.password = userDto.password;
-    try {
-      return await this.usersRepository.save(user);
-    } catch (error) {
-      console.error('Error creating user:', error);
-      throw new Error('User update failed:');
-    }
+    return await this.usersRepository.save(user);
   }
 
-  async deleteUser(id: number): Promise<string> {
-    const result = await this.usersRepository.delete({ id });
-    if (result.affected == 0) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+  async deleteUser(id: number): Promise<void> {
+    const response = await this.usersRepository.delete({ id });
+    if (response.affected === 0) {
+      throw new NotFoundException();
     }
-    return `User with ID ${id} was deleted successfully.`;
   }
 }
