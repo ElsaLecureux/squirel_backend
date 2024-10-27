@@ -16,6 +16,7 @@ import { UsersService } from './users.service';
 import { UserDto } from './user.dto';
 import { Errors } from '../Enums/enums';
 import validator from 'validator';
+import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -49,8 +50,12 @@ export class UsersController {
       return res.status(400).json({ message: Errors.INVALID_PASSWORD });
     }
     try {
-      const user = await this.usersService.createUser(userDto);
-      return res.status(201).json(user);
+      const user = new User();
+      user.username = userDto.username;
+      user.email = userDto.email;
+      await user.setPassword(userDto.password);
+      const userCreated = await this.usersService.createUser(user);
+      return res.status(201).json(userCreated);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       return res.status(500).json({ message: Errors.INTERNAL_SERVER_ERROR });

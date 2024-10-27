@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { UserDto } from './user.dto';
-import { LoginDto } from 'src/auth/login.dto';
+import { SignInDto } from '../auth/signIn.dto';
 
 @Injectable()
 export class UsersService {
@@ -20,14 +20,10 @@ export class UsersService {
     return user;
   }
 
-  async createUser(userDto: UserDto): Promise<UserDto> {
-    const user = this.usersRepository.create({
-      username: userDto.username,
-      email: userDto.email,
-      password: userDto.password,
-    });
+  async createUser(user: User): Promise<User> {
     const userCreated = await this.usersRepository.save(user);
     delete userCreated.password;
+    delete userCreated.salt;
     return userCreated;
   }
 
@@ -41,6 +37,7 @@ export class UsersService {
     user.password = userDto.password;
     const userUpdated = await this.usersRepository.save(user);
     delete userUpdated.password;
+    delete userUpdated.salt;
     return userUpdated;
   }
 
@@ -51,13 +48,25 @@ export class UsersService {
     }
   }
 
-  async signIn(loginDto: LoginDto): Promise<User> {
-    const { username, password } = loginDto;
+  async signIn(signInDto: SignInDto): Promise<User> {
+    const username = signInDto.username;
+    const password = signInDto.password;
     const user = await this.usersRepository.findOne({ where: { username } });
-    if (user.password != password) {
+    const passwordIsValid = await user.validatePassword(password);
+    if (!passwordIsValid) {
       throw new UnauthorizedException('Invalid credentials');
+    } else if (!user) {
+      throw new NotFoundException();
     } else {
       return user;
     }
+  }
+
+  async findByUsername(username: string): Promise<User | null> {
+    return await this.usersRepository.findOne({ where: { username } });
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return await this.usersRepository.findOne({ where: { email } });
   }
 }
