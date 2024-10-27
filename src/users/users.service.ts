@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { UserDto } from './user.dto';
+import { LoginDto } from 'src/auth/login.dto';
 
 @Injectable()
 export class UsersService {
@@ -47,6 +48,16 @@ export class UsersService {
     const response = await this.usersRepository.delete({ id });
     if (response.affected === 0) {
       throw new NotFoundException();
+    }
+  }
+
+  async signIn(loginDto: LoginDto): Promise<User> {
+    const { username, password } = loginDto;
+    const user = await this.usersRepository.findOne({ where: { username } });
+    if (user.password != password) {
+      throw new UnauthorizedException('Invalid credentials');
+    } else {
+      return user;
     }
   }
 }

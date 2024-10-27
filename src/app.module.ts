@@ -5,6 +5,7 @@ import { User } from './users/entities/user.entity';
 import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { UsersModule } from './users/users.module';
         synchronize: true,
       }),
     }),
+    AuthModule,
   ],
 })
 export class AppModule {}
