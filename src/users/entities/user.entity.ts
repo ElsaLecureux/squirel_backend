@@ -50,14 +50,17 @@ export class User {
   async setPassword(password: string): Promise<void> {
     const saltOrRounds = 12;
     const salt = await bcrypt.genSalt(saltOrRounds);
-    console.log(salt);
     this.salt = salt;
     const hashedPassword = await bcrypt.hash(password, this.salt);
     this.password = hashedPassword;
+    console.log('hashedPassword', hashedPassword);
   }
 
   async validatePassword(password: string): Promise<boolean> {
-    const hash = await bcrypt.hash(password, this.salt);
-    return await bcrypt.compare(this.password, hash);
+    console.log('password entered', password);
+    console.log(this.password);
+    const res = await bcrypt.compare(password, this.password);
+    console.log('response', res);
+    return res;
   }
 }

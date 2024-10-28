@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Param,
-  Post,
   ParseIntPipe,
   Delete,
   Put,
@@ -16,7 +15,6 @@ import { UsersService } from './users.service';
 import { UserDto } from './user.dto';
 import { Errors } from '../Enums/enums';
 import validator from 'validator';
-import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -33,32 +31,6 @@ export class UsersController {
       } else {
         return res.status(500).json({ message: Errors.INTERNAL_SERVER_ERROR });
       }
-    }
-  }
-
-  @Post()
-  async createUser(
-    @Body(ValidationPipe) userDto: UserDto,
-    @Res() res: Response,
-  ): Promise<Response> {
-    if (!validator.isEmail(userDto.email)) {
-      return res.status(400).json({ message: Errors.INVALID_EMAIL });
-    }
-    // eslint-disable-next-line prettier/prettier
-    const regexPassword = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-    if (!validator.matches(userDto.password, regexPassword)) {
-      return res.status(400).json({ message: Errors.INVALID_PASSWORD });
-    }
-    try {
-      const user = new User();
-      user.username = userDto.username;
-      user.email = userDto.email;
-      await user.setPassword(userDto.password);
-      const userCreated = await this.usersService.createUser(user);
-      return res.status(201).json(userCreated);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      return res.status(500).json({ message: Errors.INTERNAL_SERVER_ERROR });
     }
   }
 

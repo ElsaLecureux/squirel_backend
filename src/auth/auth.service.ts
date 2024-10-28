@@ -1,31 +1,21 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { SignInDto } from './signIn.dto';
-import { UserDto } from 'src/users/user.dto';
 import { User } from '../users/entities/user.entity';
 import { SignUpResponseDto } from './signUpResponse.dto';
+import { SignInDto } from './signIn.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
 
   async signIn(signInDto: SignInDto): Promise<any> {
-    const user = await this.usersService.signIn(signInDto);
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-    return user;
+    return await this.usersService.findByUsername(signInDto.username);
   }
 
-  async signUp(userDto: UserDto): Promise<SignUpResponseDto> {
-    const user = new User();
-    user.username = userDto.username;
-    user.email = userDto.email;
-    await user.setPassword(userDto.password);
-
+  async signUp(user: User): Promise<SignUpResponseDto> {
     const userCreated = await this.usersService.createUser(user);
 
-    //toDo generate token
+    //toDo generate token or controller generate it?
     const token = 'token';
 
     return {
