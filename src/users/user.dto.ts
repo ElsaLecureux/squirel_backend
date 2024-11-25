@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString, Matches } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
 import { Errors } from '../Enums/enums';
 
 // eslint-disable-next-line prettier/prettier
@@ -21,6 +21,6 @@ export class UserDto {
   })
   password: string;
 
-  @IsNumber()
+  //@IsNumber()
   id: number;
 }

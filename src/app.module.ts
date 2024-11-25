@@ -13,13 +13,16 @@ import { AuthModule } from './auth/auth.module';
       isGlobal: true,
       envFilePath: ['.env'],
     }),
+    //Modules
     UsersModule,
+    AuthModule,
+    //TypeOrm Config
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get<string>('DATABASE_HOST'),
-        port: configService.get<number>('PORT'),
+        port: configService.get<number>('DATABASE_PORT'),
         username: configService.get<string>('DATABASE_USER'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
@@ -27,10 +30,9 @@ import { AuthModule } from './auth/auth.module';
         controllers: [UsersController],
         providers: [UsersService],
         autoLoadEntities: true,
-        synchronize: true,
+        synchronize: false,
       }),
     }),
-    AuthModule,
   ],
 })
 export class AppModule {}
