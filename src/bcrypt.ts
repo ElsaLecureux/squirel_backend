@@ -7,8 +7,6 @@ export async function setPassword(password: string): Promise<string> {
 }
 
 export async function validatePassword(password: string, userPassword: string): Promise<boolean> {
-  console.log(password);
   const res = await bcrypt.compare(password, userPassword);
-  console.log(res);
   return res;
 }
