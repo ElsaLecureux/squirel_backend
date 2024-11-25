@@ -1,8 +1,8 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './signIn.dto';
-import { UserDto } from 'src/users/user.dto';
 import { UsersService } from 'src/users/users.service';
+import { CreateUserDto } from './createUser.dto';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -18,7 +18,7 @@ export class AuthController {
 
   @Post('signUp')
   @HttpCode(HttpStatus.CREATED)
-  async signUp(@Body(ValidationPipe) userDto: UserDto): Promise<{ access_token }> {
-    return await this.authService.signUp(userDto);
+  async signUp(@Body(ValidationPipe) createUserDto: CreateUserDto): Promise<{ access_token }> {
+    return await this.authService.signUp(createUserDto);
   }
 }
