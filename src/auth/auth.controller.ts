@@ -10,15 +10,16 @@ export class AuthController {
     private readonly usersService: UsersService,
   ) {}
 
-  @Post('signIn')
+  @Post('signin')
   @HttpCode(HttpStatus.OK)
   async signIn(@Body(ValidationPipe) signInDto: SignInDto): Promise<{ access_token }> {
     return await this.authService.signIn(signInDto);
   }
 
-  @Post('signUp')
+  @Post('signup')
   @HttpCode(HttpStatus.CREATED)
   async signUp(@Body(ValidationPipe) createUserDto: CreateUserDto): Promise<{ access_token }> {
+    console.log(createUserDto);
     return await this.authService.signUp(createUserDto);
   }
 }
