@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { UserDto } from './user.dto';
 import { Errors } from '../Enums/enums';
+import { setPassword } from 'src/bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -14,6 +15,7 @@ export class UsersService {
 
   async getUser(id: number): Promise<UserDto> {
     const user = await this.usersRepository.findOneBy({ id });
+    delete user.password;
     if (user === null) {
       throw new NotFoundException(Errors.USER_NOT_FOUND);
     }
@@ -38,7 +40,7 @@ export class UsersService {
     }
     user.username = userDto.username;
     user.email = userDto.email;
-    user.password = userDto.password;
+    user.password = await setPassword(userDto.password);
     try {
       const userUpdated = await this.usersRepository.save(user);
       delete userUpdated.password;
