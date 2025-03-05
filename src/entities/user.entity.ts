@@ -5,10 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Unique,
+  OneToMany,
 } from 'typeorm';
 
 import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
 import { Exclude } from 'class-transformer';
+import { UserPlayGame } from './userPlayGame.entity';
 
 // eslint-disable-next-line prettier/prettier
 const regexPassword = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -40,4 +42,7 @@ export class User {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(() => UserPlayGame, (userPlayGame) => userPlayGame.user, { onDelete: 'CASCADE' })
+  userPlayGame: UserPlayGame[];
 }

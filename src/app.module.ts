@@ -2,10 +2,16 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './entities/user.entity';
+import { Game } from './entities/game.entity';
+import { UserPlayGame } from './entities/userPlayGame.entity';
 import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { UserPlayGameController } from './userPlayGame/userPlayGame.controller';
+import { UserPlayGameService } from './userPlayGame/userPlayGame.service';
+import { GameModule } from './game/game.module';
+import { UserPlayGameModule } from './userPlayGame/userPlayGame.module';
 
 @Module({
   imports: [
@@ -16,6 +22,8 @@ import { AuthModule } from './auth/auth.module';
     //Modules
     UsersModule,
     AuthModule,
+    GameModule,
+    UserPlayGameModule,
     //TypeOrm Config
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -26,9 +34,9 @@ import { AuthModule } from './auth/auth.module';
         username: configService.get<string>('DATABASE_USER'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        entities: [User],
-        controllers: [UsersController],
-        providers: [UsersService],
+        entities: [User, Game, UserPlayGame],
+        controllers: [UsersController, UserPlayGameController],
+        providers: [UsersService, UserPlayGameService],
         autoLoadEntities: true,
         synchronize: false,
       }),
