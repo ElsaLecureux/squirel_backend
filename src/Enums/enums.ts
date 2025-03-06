@@ -7,4 +7,5 @@ export enum Errors {
   USERNAME_ALREADY_EXIST = 'This username is already used, please choose a different one',
   EMAIL_ALREADY_EXIST = 'This email is already used, please enter a different one or ask for a password reset',
   MISSING_REQUIRED_FIELD = 'Missing required field(s).',
+  DATA_NOT_FOUND = 'No Data found',
 }
