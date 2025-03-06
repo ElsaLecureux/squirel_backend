@@ -15,10 +15,10 @@ export class UsersService {
 
   async getUser(id: number): Promise<UserDto> {
     const user = await this.usersRepository.findOneBy({ id });
-    delete user.password;
     if (user === null) {
       throw new NotFoundException(Errors.USER_NOT_FOUND);
     }
+    delete user.password;
     return user;
   }
 
