@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, ValidationPipe } from '@nestjs/common';
 import { UserPlayGameService } from './userPlayGame.service';
 import { UserPlayGameDto, UserPlayGameFullDto } from './userPlayGame.dto';
 
@@ -6,12 +6,10 @@ import { UserPlayGameDto, UserPlayGameFullDto } from './userPlayGame.dto';
 export class UserPlayGameController {
   constructor(private readonly userPlayGameService: UserPlayGameService) {}
   //get User game score
-  @Get()
+  @Get('/:id')
   @HttpCode(HttpStatus.OK)
-  async getUserGamesWon(
-    @Body(ValidationPipe) userPlayGameDto: UserPlayGameDto,
-  ): Promise<UserPlayGameFullDto> {
-    return await this.userPlayGameService.getUserGamesWon(userPlayGameDto);
+  async getUserGamesWon(@Param('id', ParseIntPipe) userId: number): Promise<UserPlayGameFullDto> {
+    return await this.userPlayGameService.getUserGamesWon(userId);
   }
 
   @Post()
