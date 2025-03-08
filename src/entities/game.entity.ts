@@ -9,6 +9,12 @@ export class Game {
   @Column()
   name: string;
 
+  @Column({ type: 'integer', nullable: true })
+  avatar: number;
+
+  @Column({ type: 'integer', nullable: true })
+  avatarGold: number;
+
   @OneToMany(() => UserPlayGame, (userPlayGame) => userPlayGame.game, { onDelete: 'CASCADE' })
   userPlayGame: UserPlayGame[];
 }

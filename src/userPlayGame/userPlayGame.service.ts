@@ -11,16 +11,24 @@ export class UserPlayGameService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async getUserGamesWon(userPlayGameDto: UserPlayGameDto): Promise<UserPlayGameFullDto> {
-    const userId = userPlayGameDto.userId;
-    //ajouter join pour avoir le nom du jeu!
-    const infos = await this.dataSource.query(`SELECT * FROM userplaygame WHERE userId=$1`, [
-      userId,
-    ]);
+  async getUserGamesWon(userId: number): Promise<UserPlayGameFullDto> {
+    const infos = await this.dataSource.query(
+      `SELECT userplaygame.userId, userplaygame.gameId, userplaygame.numberOfTimeWon, game.name, encode(lo_get(game.avatar), 'base64') AS avatar_base64, encode(lo_get(game.avatarGold), 'base64') AS avatarGold_base64 FROM userplaygame INNER JOIN game ON userplaygame.gameId = game.id WHERE userId=$1 `,
+      [userId],
+    );
     if (infos.length === 0) {
       throw new NotFoundException(Errors.DATA_NOT_FOUND);
     }
-    return infos;
+    console.log(infos);
+    const datas = infos.map((gameData) => {
+      console.log(gameData);
+      gameData.avatar = `data:image/png;base64,${gameData.avatar_base64}`;
+      gameData.avatarGold = `data:image/png;base64,${gameData.avatargold_base64}`;
+      delete gameData.avatar_base64;
+      delete gameData.avatargold_base64;
+      return gameData;
+    });
+    return datas;
   }
 
   async playerWonGame(userPlayGameDto: UserPlayGameDto): Promise<UserPlayGameFullDto> {
