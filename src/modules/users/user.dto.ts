@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
-import { Errors } from '../Enums/enums';
+import { Errors } from '../../shared/enums/errorsEnum';
 
 // eslint-disable-next-line prettier/prettier
 const regexPassword = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
