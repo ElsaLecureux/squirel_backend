@@ -10,7 +10,7 @@ import {
 
 import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
 import { Exclude } from 'class-transformer';
-import { UserPlayGame } from './userPlayGame.entity';
+import { UserPlayGame } from '../userPlayGame/userPlayGame.entity';
 
 // eslint-disable-next-line prettier/prettier
 const regexPassword = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;

@@ -1,14 +1,18 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { DataSource } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { UserPlayGameDto, UserPlayGameFullDto } from './userPlayGame.dto';
-import { Errors } from 'src/Enums/enums';
+import { Errors } from 'src/shared/enums/errorsEnum';
+import { UserPlayGame } from './userPlayGame.entity';
 
 @Injectable()
 export class UserPlayGameService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly dataSource: DataSource,
+    @InjectRepository(UserPlayGame)
+    private readonly userPlayGameRepository: Repository<UserPlayGame>,
   ) {}
 
   async getUserGamesWon(userId: number): Promise<UserPlayGameFullDto> {
@@ -36,6 +40,12 @@ export class UserPlayGameService {
     const gameId = userPlayGameDto.gameId;
     try {
       let infos = [];
+      // infos = await this.userPlayGameRepository.find({
+      //   where: {
+      //     user: userId,
+      //     game: gameId,
+      //   },
+      // });
       infos = await this.dataSource.query(
         `SELECT * FROM userplaygame WHERE userId=$1 AND gameId=$2`,
         [userId, gameId],

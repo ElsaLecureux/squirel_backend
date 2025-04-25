@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { User } from './entities/user.entity';
-import { Game } from './entities/game.entity';
-import { UserPlayGame } from './entities/userPlayGame.entity';
-import { UsersController } from './users/users.controller';
-import { UsersService } from './users/users.service';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import { UserPlayGameController } from './userPlayGame/userPlayGame.controller';
-import { UserPlayGameService } from './userPlayGame/userPlayGame.service';
-import { GameModule } from './game/game.module';
-import { UserPlayGameModule } from './userPlayGame/userPlayGame.module';
+import { Game } from './modules/game/game.entity';
+import { UserPlayGame } from './modules/userPlayGame/userPlayGame.entity';
+import { User } from './modules/users/user.entity';
+import { UsersController } from './modules/users/users.controller';
+import { UsersService } from './modules/users/users.service';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserPlayGameController } from './modules/userPlayGame/userPlayGame.controller';
+import { UserPlayGameService } from './modules/userPlayGame/userPlayGame.service';
+import { GameModule } from './modules/game/game.module';
+import { UserPlayGameModule } from './modules/userPlayGame/userPlayGame.module';
 
 @Module({
   imports: [

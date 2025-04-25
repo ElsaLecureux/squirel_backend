@@ -1,10 +1,10 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../entities/user.entity';
+import { User } from './user.entity';
 import { UserDto } from './user.dto';
-import { Errors } from '../Enums/enums';
-import { setPassword } from 'src/bcrypt';
+import { Errors } from '../../shared/enums/errorsEnum';
+import { setPassword } from 'src/shared/utils/hash-password.utils';
 
 @Injectable()
 export class UsersService {

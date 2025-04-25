@@ -5,12 +5,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { User } from '../entities/user.entity';
-import { SignInDto } from './signIn.dto';
+import { User } from '../users/user.entity';
+import { SignInDto } from './dto/signIn.dto';
 import { JwtService } from '@nestjs/jwt';
-import { validatePassword, setPassword } from 'src/bcrypt';
-import { Errors } from '../Enums/enums';
-import { CreateUserDto } from './createUser.dto';
+import { validatePassword, setPassword } from 'src/shared/utils/hash-password.utils';
+import { Errors } from '../../shared/enums/errorsEnum';
+import { CreateUserDto } from './dto/createUser.dto';
 
 @Injectable()
 export class AuthService {
