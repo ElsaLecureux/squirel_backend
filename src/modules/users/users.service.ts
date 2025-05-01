@@ -5,6 +5,7 @@ import { User } from './user.entity';
 import { UserDto } from './user.dto';
 import { Errors } from '../../shared/enums/errorsEnum';
 import { setPassword } from 'src/shared/utils/hash-password.utils';
+import { CreateUserDto } from '../auth/dto/createUser.dto';
 
 @Injectable()
 export class UsersService {
@@ -33,14 +34,14 @@ export class UsersService {
     }
   }
 
-  async updateUser(id: number, userDto: UserDto): Promise<UserDto> {
+  async updateUser(id: number, createUserDto: CreateUserDto): Promise<UserDto> {
     const user = await this.usersRepository.findOneBy({ id });
     if (user === null) {
       throw new NotFoundException(Errors.USER_NOT_FOUND);
     }
-    user.username = userDto.username;
-    user.email = userDto.email;
-    user.password = await setPassword(userDto.password);
+    user.username = createUserDto.username;
+    user.email = createUserDto.email;
+    user.password = await setPassword(createUserDto.password);
     try {
       const userUpdated = await this.usersRepository.save(user);
       delete userUpdated.password;
