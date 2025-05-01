@@ -28,7 +28,7 @@ export class UsersController {
 
   @Put('/:id')
   @ApiBody({
-    type: UserDto,
+    type: CreateUserDto,
     description: 'Json structure for user object',
   })
   @ApiResponse({ status: 201, description: 'The user has been successfully updated' })
