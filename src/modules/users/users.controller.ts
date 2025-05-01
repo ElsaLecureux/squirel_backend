@@ -12,28 +12,37 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDto } from './user.dto';
+import { CreateUserDto } from '../auth/dto/createUser.dto';
+import { ApiBody, ApiResponse } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('/:id')
+  @ApiResponse({ status: 200, description: 'The user has been successfully found' })
   @HttpCode(HttpStatus.OK)
   async findUser(@Param('id', ParseIntPipe) id: number): Promise<UserDto> {
     return await this.usersService.getUser(id);
   }
 
   @Put('/:id')
+  @ApiBody({
+    type: CreateUserDto,
+    description: 'Json structure for user object',
+  })
+  @ApiResponse({ status: 201, description: 'The user has been successfully updated' })
   @HttpCode(HttpStatus.OK)
   async updateUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body(ValidationPipe) userDto: UserDto,
+    @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<UserDto> {
-    return await this.usersService.updateUser(id, userDto);
+    return await this.usersService.updateUser(id, createUserDto);
   }
 
   @Delete('/:id')
   @HttpCode(HttpStatus.OK)
+  @ApiResponse({ status: 200, description: 'The user has been successfully deleted' })
   async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
     try {
       await this.usersService.deleteUser(id);
