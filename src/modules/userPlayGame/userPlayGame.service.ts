@@ -23,9 +23,7 @@ export class UserPlayGameService {
     if (infos.length === 0) {
       throw new NotFoundException(Errors.DATA_NOT_FOUND);
     }
-    console.log(infos);
     const datas = infos.map((gameData) => {
-      console.log(gameData);
       gameData.avatar = `data:image/png;base64,${gameData.avatar_base64}`;
       gameData.avatarGold = `data:image/png;base64,${gameData.avatargold_base64}`;
       delete gameData.avatar_base64;
