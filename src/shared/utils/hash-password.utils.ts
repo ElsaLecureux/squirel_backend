@@ -10,3 +10,9 @@ export async function validatePassword(password: string, userPassword: string): 
   const res = await bcrypt.compare(password, userPassword);
   return res;
 }
+
+export async function comparePasswords(passwordEntered: string, passwordFromDB): Promise<boolean> {
+  const res = await bcrypt.compare(passwordEntered, passwordFromDB);
+  console.log(res);
+  return res;
+}

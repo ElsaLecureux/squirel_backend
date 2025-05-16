@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString, Matches } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, Matches } from 'class-validator';
 import { Errors } from '../../shared/enums/errorsEnum';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -26,6 +26,7 @@ export class UserDto {
   password: string;
 
   @IsNumber()
+  @IsOptional()
   @ApiProperty()
   id: number;
 }
