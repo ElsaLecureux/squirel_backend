@@ -6,8 +6,7 @@ import { DataSource } from 'typeorm';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const dataSource = app.get(DataSource);
-  await dataSource.runMigrations();
+  app.get(DataSource);
   const config = new DocumentBuilder()
     .setTitle('Squirel API')
     .setDescription(

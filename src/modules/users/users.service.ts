@@ -46,7 +46,6 @@ export class UsersService {
     }
     user.username = updateUserDto.username;
     user.email = updateUserDto.email;
-    console.log(updateUserDto.password, user.password);
     const isPasswordValid = await comparePasswords(updateUserDto.password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException(Errors.INVALID_CREDENTIALS);

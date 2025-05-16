@@ -4,7 +4,9 @@ export class Init1747237044306 implements MigrationInterface {
   name = 'Init1747237044306';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`
+    const userTableExists = await queryRunner.hasTable('user');
+    if (!userTableExists) {
+      await queryRunner.query(`
         CREATE TABLE "user" (
             "id" SERIAL PRIMARY KEY, 
             "username" varchar NOT NULL UNIQUE,
@@ -12,7 +14,10 @@ export class Init1747237044306 implements MigrationInterface {
             "password" varchar NOT NULL, 
             "created_at" TIMESTAMP NOT NULL DEFAULT NOW(), 
             "updated_at" TIMESTAMP NOT NULL DEFAULT NOW())`);
-    await queryRunner.query(`
+    }
+    const cardTableExists = await queryRunner.hasTable('card');
+    if (!cardTableExists) {
+      await queryRunner.query(`
         CREATE TABLE "card" (
             "id" SERIAL PRIMARY KEY, 
             "name" varchar NOT NULL, 
@@ -26,9 +31,15 @@ export class Init1747237044306 implements MigrationInterface {
             "endangered" boolean NOT NULL, 
             "icon" integer NULL, 
             "image" integer NULL)`);
-    await queryRunner.query(`
+    }
+    const gameTableExists = await queryRunner.hasTable('game');
+    if (!gameTableExists) {
+      await queryRunner.query(`
         CREATE TABLE "game" ("id" SERIAL PRIMARY KEY, "name" varchar(25) NOT NULL, "avatar" OID NULL, "avatarGold" OID NULL)`);
-    await queryRunner.query(`
+    }
+    const userPlayGameTableExists = await queryRunner.hasTable('user_play_game');
+    if (!userPlayGameTableExists) {
+      await queryRunner.query(`
         CREATE TABLE "user_play_game" (
             "id" SERIAL PRIMARY KEY, 
             "numberOfTimeWon" integer NOT NULL, 
@@ -36,6 +47,7 @@ export class Init1747237044306 implements MigrationInterface {
             "gameId" integer, 
             CONSTRAINT "FK_user" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE, 
             CONSTRAINT "FK_game" FOREIGN KEY ("gameId") REFERENCES "game" ("id") ON DELETE CASCADE)`);
+    }
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
