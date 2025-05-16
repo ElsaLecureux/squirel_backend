@@ -39,6 +39,8 @@ import { UserPlayGameModule } from './modules/userPlayGame/userPlayGame.module';
         providers: [UsersService, UserPlayGameService],
         autoLoadEntities: true,
         synchronize: false,
+        migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+        migrationsRun: false,
       }),
     }),
   ],
