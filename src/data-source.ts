@@ -1,5 +1,9 @@
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
+import { User } from './modules/users/user.entity';
+import { Game } from './modules/game/game.entity';
+import { UserPlayGame } from './modules/userPlayGame/userPlayGame.entity';
+import { Card } from './modules/card/card.entity';
 
 dotenv.config();
 
@@ -11,7 +15,7 @@ export const AppDataSource = new DataSource({
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
   logging: true,
-  entities: ['src/**/*.entity.ts'],
+  entities: [User, Game, UserPlayGame, Card],
   migrations: ['src/migrations/**/*.ts'],
   migrationsRun: false,
   synchronize: false,
