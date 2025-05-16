@@ -14,6 +14,7 @@ import { UsersService } from './users.service';
 import { UserDto } from './user.dto';
 import { CreateUserDto } from '../auth/dto/createUser.dto';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
+import { UpdateUserDto } from '../auth/dto/updateUser.dto';
 
 @Controller('users')
 export class UsersController {
@@ -35,9 +36,9 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async updateUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body(ValidationPipe) createUserDto: CreateUserDto,
+    @Body(ValidationPipe) updateUserDto: UpdateUserDto,
   ): Promise<UserDto> {
-    return await this.usersService.updateUser(id, createUserDto);
+    return await this.usersService.updateUser(id, updateUserDto);
   }
 
   @Delete('/:id')
