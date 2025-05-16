@@ -3,3 +3,6 @@ dist
 *.log
 *.md
 .git
+.env
+.env.production
+.env.development
