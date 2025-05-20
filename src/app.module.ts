@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Game } from './modules/game/game.entity';
 import { UserPlayGame } from './modules/userPlayGame/userPlayGame.entity';
@@ -43,6 +44,7 @@ import { UserPlayGameModule } from './modules/userPlayGame/userPlayGame.module';
         migrationsRun: false,
       }),
     }),
+    MongooseModule.forRoot('mongodb://127.0.0.1:27017/SquirelMongo'),
   ],
 })
 export class AppModule {}
