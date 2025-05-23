@@ -13,13 +13,13 @@ import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { GamePlayDto } from './gamePlay.dto';
 import { GamePlayService } from './gamePlay.service';
 
-@Controller()
+@Controller('/gamePlay')
 export class GamePlayController {
   constructor(private readonly gamePlayService: GamePlayService) {}
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: 200, description: 'The game play has been successfully loaded' })
-  async getGamePlay(@Param('id', ParseIntPipe) userId: number): Promise<GamePlayDto> {
+  async getGamePlay(@Param('id', ParseIntPipe) userId: number): Promise<GamePlayDto> | null {
     return this.gamePlayService.getGamePlay(userId);
   }
 

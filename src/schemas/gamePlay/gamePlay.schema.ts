@@ -1,22 +1,22 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { CardDto } from './card.dto';
+import { Card, cardSchema } from '../card/card.schema';
 
-export type gamePlayMemoryDocument = HydratedDocument<GamePlayMemory>;
+export type GamePlayDocument = HydratedDocument<GamePlay>;
 
 @Schema()
-export class GamePlayMemory {
+export class GamePlay {
   @Prop()
   id: number;
 
-  @Prop()
+  @Prop({ required: true, unique: true })
   userId: number;
 
   @Prop()
-  date: Date;
+  date: string;
 
-  @Prop([{}])
-  cards: CardDto[];
+  @Prop([cardSchema])
+  cards: Card[];
 }
 
-export const gamePlayMemorySchema = SchemaFactory.createForClass(GamePlayMemory);
+export const gamePlaySchema = SchemaFactory.createForClass(GamePlay);
