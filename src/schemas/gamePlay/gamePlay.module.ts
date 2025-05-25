@@ -5,7 +5,11 @@ import { GamePlayController } from './gamePlay.controller';
 import { GamePlayService } from './gamePlay.service';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: GamePlay.name, schema: gamePlaySchema }])],
+  imports: [
+    MongooseModule.forFeature([
+      { name: GamePlay.name, schema: gamePlaySchema, collection: 'gamePlay' },
+    ]),
+  ],
   controllers: [GamePlayController],
   providers: [GamePlayService],
 })
