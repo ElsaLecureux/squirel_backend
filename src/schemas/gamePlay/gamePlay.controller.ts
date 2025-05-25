@@ -34,6 +34,7 @@ export class GamePlayController {
     description: 'Json structure for game play object',
   })
   async updateGamePlay(@Body(ValidationPipe) gamePlayDto: GamePlayDto): Promise<GamePlayDto> {
+    console.log(gamePlayDto);
     return this.gamePlayService.updateGamePlay(gamePlayDto);
   }
 }

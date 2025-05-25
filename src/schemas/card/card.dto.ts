@@ -3,14 +3,14 @@ import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CardDto {
   @ApiProperty()
-  @IsBoolean()
-  @IsNotEmpty()
-  won: boolean;
-
-  @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
   id: number;
+
+  @ApiProperty()
+  @IsBoolean()
+  @IsNotEmpty()
+  won: boolean;
 
   @ApiProperty()
   @IsString()
