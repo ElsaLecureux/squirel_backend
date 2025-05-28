@@ -15,5 +15,10 @@ export class CardDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  animal: string;
+  name: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  image: string;
 }

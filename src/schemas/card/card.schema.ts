@@ -5,14 +5,17 @@ export type CardDocument = HydratedDocument<Card>;
 
 @Schema()
 export class Card {
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   id: number;
 
-  @Prop()
+  @Prop({ required: true })
   won: boolean;
 
-  @Prop()
-  animal: string;
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true })
+  image: string;
 }
 
 export const cardSchema = SchemaFactory.createForClass(Card);
