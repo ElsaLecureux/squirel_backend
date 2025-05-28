@@ -12,7 +12,7 @@ export class GamePlay {
   @Prop({ required: true, unique: true })
   userId: number;
 
-  @Prop()
+  @Prop({ required: true })
   date: string;
 
   @Prop([cardSchema])
