@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Game } from './modules/game/game.entity';
 import { UserPlayGame } from './modules/userPlayGame/userPlayGame.entity';
@@ -12,6 +13,7 @@ import { UserPlayGameController } from './modules/userPlayGame/userPlayGame.cont
 import { UserPlayGameService } from './modules/userPlayGame/userPlayGame.service';
 import { GameModule } from './modules/game/game.module';
 import { UserPlayGameModule } from './modules/userPlayGame/userPlayGame.module';
+import { GamePlayModule } from './schemas/gamePlay/gamePlay.module';
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import { UserPlayGameModule } from './modules/userPlayGame/userPlayGame.module';
     AuthModule,
     GameModule,
     UserPlayGameModule,
+    GamePlayModule,
     //TypeOrm Config
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -41,6 +44,12 @@ import { UserPlayGameModule } from './modules/userPlayGame/userPlayGame.module';
         synchronize: false,
         migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
         migrationsRun: false,
+      }),
+    }),
+    MongooseModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: `mongodb+srv://${configService.get<string>('MONGO_DATABASE_USER')}:${configService.get<string>('MONGO_DATABASE_PASSWORD')}@cluster.nh2qdfn.mongodb.net/${configService.get<string>('MONGO_DATABASE_NAME')}?retryWrites=true&w=majority`,
       }),
     }),
   ],

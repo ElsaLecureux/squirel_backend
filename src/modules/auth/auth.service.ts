@@ -22,12 +22,10 @@ export class AuthService {
   async signIn(signInDto: SignInDto): Promise<any> {
     const user = await this.usersService.findByUsername(signInDto.username);
     if (user === null) {
-      console.log('user not found');
       throw new UnauthorizedException(Errors.INVALID_CREDENTIALS);
     }
     const passwordIsValid = await validatePassword(signInDto.password, user.password);
     if (!passwordIsValid) {
-      console.log('wrong password');
       throw new UnauthorizedException(Errors.INVALID_CREDENTIALS);
     }
     const payload = { sub: user.id };
