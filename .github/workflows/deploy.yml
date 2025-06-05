@@ -33,15 +33,15 @@ jobs:
             password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Send backend image to hub
-        uses: push squirel_backend
+        run: docker push myusername/squirel_backend:latest
 
       #connect to vps with ssh
       - name: connect to vps and pull docker image
         uses: appleboy/ssh-action@v0.1.10
         with: 
           host: ${{ secrets.VPS_HOST }}
-          username:
-          key:
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             echo "I did it!"
 
