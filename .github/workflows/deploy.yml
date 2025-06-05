@@ -18,9 +18,12 @@ jobs:
       - name: Install dependencies for web
         run: npm ci
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       #build docker image
       - name: create docker image
-        run: docker-compose build
+        run: docker compose build
       #recreate a .env file with secretes
 
       # create a volume with .env for back to use
@@ -42,8 +45,10 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            echo "I did it!"
+          script:  |
+            docker pull myusername/squirel_backend:latest
+            # Add your deployment commands here
+            echo "Image pulled successfully!"
 
       
 
