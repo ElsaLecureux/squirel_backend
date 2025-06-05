@@ -33,7 +33,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: squirel_backend:latest
-    container_name: squirel-backend
+    container_name: squirel_backend
     ports:
       - "3000:3000"
     env_file:
