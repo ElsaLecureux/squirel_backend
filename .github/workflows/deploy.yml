@@ -36,7 +36,7 @@ jobs:
             password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Send backend image to hub
-        run: docker push myusername/squirel_backend:latest
+        run: docker push squirel_backend:latest
 
       #connect to vps with ssh
       - name: connect to vps and pull docker image
@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script:  |
-            docker pull myusername/squirel_backend:latest
+            docker pull squirel_backend:latest
             # Add your deployment commands here
             echo "Image pulled successfully!"
 
