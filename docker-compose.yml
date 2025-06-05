@@ -7,6 +7,8 @@ services:
     container_name: postgres
     ports:
       - "5432:5432"
+    env_file:
+      - .env.production
     environment:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
@@ -27,6 +29,8 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=admin
     ports:
       - "5050:80"
+    env_file:
+      - .env.production
 
   backend:
     build:
@@ -44,4 +48,3 @@ services:
 
 volumes:
   db_data:
-

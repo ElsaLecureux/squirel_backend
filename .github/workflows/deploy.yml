@@ -55,8 +55,17 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script:  |
 
+            set -e
+            
+            #create app directory
+            echo "Creating app directory"
             mkdir -p /home/$USER/app
             cd /home/$USER/app
+
+            if [ ! -f "docker-compose.yml" ]; then
+              echo "Error: docker-compose.yml not found on VPS!"
+              exit 1
+            fi
 
             #recreate .env file 
             cat > .env.production << BANANA
