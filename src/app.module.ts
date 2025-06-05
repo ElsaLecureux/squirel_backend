@@ -41,9 +41,9 @@ import { GamePlayModule } from './schemas/gamePlay/gamePlay.module';
         controllers: [UsersController, UserPlayGameController],
         providers: [UsersService, UserPlayGameService],
         autoLoadEntities: true,
-        synchronize: false,
+        synchronize: configService.get<boolean>('TYPEORM_SYNCHRONIZE'),
         migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-        migrationsRun: false,
+        migrationsRun: configService.get<boolean>('TYPEORM_MIGRATIONS_RUN'),
       }),
     }),
     MongooseModule.forRootAsync({
