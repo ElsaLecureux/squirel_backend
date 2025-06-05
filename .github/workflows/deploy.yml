@@ -57,21 +57,35 @@ jobs:
             username: ${{ secrets.DOCKER_USERNAME }}
             password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Send backend image to hub
-        run: docker push squirel_backend:latest
+      - name: Tag and push image to docker hub
+        run: |
+          docker tag squirel_backend:latest ${{ secrets.DOCKER_USERNAME }}/squirel_backend:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/squirel_backend:latest
 
       #connect to vps with ssh
-      - name: connect to vps and pull docker image
+      - name: Copy files to VPS
         uses: appleboy/ssh-action@v0.1.10
         with: 
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script:  |
+
+            mkdir -p /home/$USER/app
+            cd /home/$USER/app
+
             docker pull squirel_backend:latest
-            # Add your deployment commands here
+            docker tag ${{ secrets.DOCKER_USERNAME }}/squirel_backend:latest squirel_backend:latest
             echo "Image pulled successfully!"
 
+            #stop existing container and start a new one
+            docker compose up || true
+            docker compose up -d
+            sleep 15
+            
+            # run migration to create/update tables
+            docker exec squirel_backend npm run typeorm migration:run
+            echo "Deployment completed!"
       
 
       
