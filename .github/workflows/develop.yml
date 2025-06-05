@@ -1,6 +1,9 @@
 name: develop workflow
 
-on: [push]
+on: 
+  pull_request:
+    branches:
+      [develop, main]
 jobs:
 
   tests:
