@@ -74,7 +74,11 @@ jobs:
             mkdir -p /home/$USER/app
             cd /home/$USER/app
 
-            docker pull squirel_backend:latest
+            #connect to docker hub
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+            #pull and change image tag to match docker compose
+            docker pull ${{ secrets.DOCKER_USERNAME }}/squirel_backend:latest
             docker tag ${{ secrets.DOCKER_USERNAME }}/squirel_backend:latest squirel_backend:latest
             echo "Image pulled successfully!"
 
