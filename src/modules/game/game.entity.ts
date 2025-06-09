@@ -6,7 +6,7 @@ export class Game {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true, length: 25 })
   name: string;
 
   @Column({ type: 'integer', nullable: true })

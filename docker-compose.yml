@@ -41,7 +41,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - .env.production
+      - /home/root/app/.env.production
     depends_on:
       postgres:
         condition: service_healthy

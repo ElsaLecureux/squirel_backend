@@ -73,7 +73,8 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script:  |
 
-            set -e
+            #make workflow fail on any command fail in pipeline
+            -o pipefail
             
             #create app directory
             echo "Creating app directory"
@@ -94,8 +95,9 @@ jobs:
             echo "Image pulled successfully!"
 
             #stop existing container and start a new one
-            docker compose up || true
-            docker compose up -d
+            docker compose down || true
+            docker compose --env-file .env.production up -d
+
             sleep 15
             
             # run migration to create/update tables
