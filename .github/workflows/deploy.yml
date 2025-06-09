@@ -1,6 +1,9 @@
 name: deploy workflow
 
-on: [push]
+on:
+  push:
+    branches:
+      [master]
   
 jobs:
   deploy:
