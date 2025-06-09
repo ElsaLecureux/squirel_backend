@@ -1,0 +1,105 @@
+name: deploy workflow
+
+on: [push]
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with: 
+          node-version: 18.x
+          cache: 'npm'
+      
+      - name: Install dependencies for web
+        run: npm ci
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      #build docker image
+      - name: create docker image of backend
+        run: docker compose build
+
+      #recreate .env file
+      - name: Recreate .env
+        run: |
+          cat > .env.production <<EOF 
+            NODE_ENV=production
+            DATABASE_HOST=${{ secrets.POSTGRES_DATABASE_HOST }}
+            DATABASE_PORT=${{ secrets.POSTGRES_DATABASE_PORT }}
+            DATABASE_USER=${{ secrets.POSTGRES_DATABASE_USER }}
+            DATABASE_PASSWORD=${{ secrets.POSTGRES_DATABASE_PASSWORD }}
+            DATABASE_NAME=${{ secrets.POSTGRES_DATABASE_NAME  }}
+            MONGO_DATABASE_PASSWORD=${{ secrets.MONGO_DATABASE_PASSWORD }}
+            MONGO_DATABASE_USER=${{ secrets.MONGO_DATABASE_USER }}
+            MONGO_DATABASE_NAME=${{ secrets.MONGO_DATABASE_NAME }}
+            TYPEORM_SYNCHRONIZE=${{ secrets.TYPEORM_SYNCHRONIZE }}
+            TYPEORM_MIGRATIONS_RUN=${{ secrets.TYPEORM_MIGRATIONS_RUN }}
+            SECRET=${{ secrets.SECRET }}
+            EOF
+
+      - name: Copy .env to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with: 
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: ".env.production, docker-compose.yml"
+          target: /home/${{ secrets.VPS_USERNAME }}/app/
+
+      #connect to vps with ssh
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Tag and push image to docker hub
+        run: |
+          docker tag squirel_backend:latest ${{ secrets.DOCKER_USERNAME }}/squirel_backend:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/squirel_backend:latest
+
+      #connect to vps with ssh
+      - name: Copy files to VPS
+        uses: appleboy/ssh-action@v0.1.10
+        with: 
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script:  |
+
+            #make workflow fail on any command fail in pipeline
+            -o pipefail
+            
+            #create app directory
+            echo "Creating app directory"
+            mkdir -p /home/$USER/app
+            cd /home/$USER/app
+
+            if [ ! -f "docker-compose.yml" ]; then
+              echo "Error: docker-compose.yml not found on VPS!"
+              exit 1
+            fi 
+
+            #connect to docker hub
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+            #pull and change image tag to match docker compose
+            docker pull ${{ secrets.DOCKER_USERNAME }}/squirel_backend:latest
+            docker tag ${{ secrets.DOCKER_USERNAME }}/squirel_backend:latest squirel_backend:latest
+            echo "Image pulled successfully!"
+
+            #stop existing container and start a new one
+            docker compose down || true
+            docker compose --env-file .env.production up -d
+
+            sleep 15
+            
+            # run migration to create/update tables
+            docker exec squirel_backend npm run typeorm migration:run
+            echo "Deployment completed!"

@@ -1,17 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Game } from './modules/game/game.entity';
-import { UserPlayGame } from './modules/userPlayGame/userPlayGame.entity';
-import { User } from './modules/users/user.entity';
-import { UsersController } from './modules/users/users.controller';
-import { UsersService } from './modules/users/users.service';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { UserPlayGameController } from './modules/userPlayGame/userPlayGame.controller';
-import { UserPlayGameService } from './modules/userPlayGame/userPlayGame.service';
 import { GameModule } from './modules/game/game.module';
 import { UserPlayGameModule } from './modules/userPlayGame/userPlayGame.module';
+import { GamePlayModule } from './schemas/gamePlay/gamePlay.module';
 
 @Module({
   imports: [
@@ -24,6 +19,7 @@ import { UserPlayGameModule } from './modules/userPlayGame/userPlayGame.module';
     AuthModule,
     GameModule,
     UserPlayGameModule,
+    GamePlayModule,
     //TypeOrm Config
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -34,13 +30,16 @@ import { UserPlayGameModule } from './modules/userPlayGame/userPlayGame.module';
         username: configService.get<string>('DATABASE_USER'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        entities: [User, Game, UserPlayGame],
-        controllers: [UsersController, UserPlayGameController],
-        providers: [UsersService, UserPlayGameService],
         autoLoadEntities: true,
-        synchronize: false,
+        synchronize: configService.get<boolean>('TYPEORM_SYNCHRONIZE'),
         migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-        migrationsRun: false,
+        migrationsRun: configService.get<boolean>('TYPEORM_MIGRATIONS_RUN'),
+      }),
+    }),
+    MongooseModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: `mongodb+srv://${configService.get<string>('MONGO_DATABASE_USER')}:${configService.get<string>('MONGO_DATABASE_PASSWORD')}@cluster.nh2qdfn.mongodb.net/${configService.get<string>('MONGO_DATABASE_NAME')}?retryWrites=true&w=majority`,
       }),
     }),
   ],

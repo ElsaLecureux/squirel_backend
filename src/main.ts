@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { DataSource } from 'typeorm';
+import cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,7 +17,13 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
-  app.enableCors();
+  app.use(
+    cors({
+      origin: ['http://localhost:8080', 'https://squirelproject.netlify.app'],
+      credentials: true,
+    }),
+  );
+
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
 }
