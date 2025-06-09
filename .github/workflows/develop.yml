@@ -3,7 +3,7 @@ name: develop workflow
 on: 
   pull_request:
     branches:
-      [develop, main]
+      [develop, master]
 jobs:
 
   tests:
