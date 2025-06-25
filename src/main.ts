@@ -7,7 +7,7 @@ import { DataSource } from 'typeorm';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
-      origin: ['http://localhost:8080', 'https://squirelproject.netlify.app'],
+      origin: ['http://localhost:8081', 'https://squirelproject.netlify.app'],
       credentials: true,
     },
   });
