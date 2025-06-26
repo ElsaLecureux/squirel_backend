@@ -13,7 +13,7 @@ export class Game {
   avatar: number;
 
   @Column({ type: 'integer', nullable: true })
-  avatarGold: number;
+  avatargold: number;
 
   @OneToMany(() => UserPlayGame, (userPlayGame) => userPlayGame.game, { onDelete: 'CASCADE' })
   userPlayGame: UserPlayGame[];

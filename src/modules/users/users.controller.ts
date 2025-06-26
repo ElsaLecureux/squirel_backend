@@ -9,18 +9,21 @@ import {
   ValidationPipe,
   HttpStatus,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDto } from './user.dto';
 import { CreateUserDto } from '../auth/dto/createUser.dto';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { UpdateUserDto } from '../auth/dto/updateUser.dto';
+import { AuthGuard } from 'src/shared/guards/auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('/:id')
+  @UseGuards(AuthGuard)
   @ApiResponse({ status: 200, description: 'The user has been successfully found' })
   @HttpCode(HttpStatus.OK)
   async findUser(@Param('id', ParseIntPipe) id: number): Promise<UserDto> {
@@ -28,6 +31,7 @@ export class UsersController {
   }
 
   @Put('/:id')
+  @UseGuards(AuthGuard)
   @ApiBody({
     type: CreateUserDto,
     description: 'Json structure for user object',
@@ -42,6 +46,7 @@ export class UsersController {
   }
 
   @Delete('/:id')
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: 200, description: 'The user has been successfully deleted' })
   async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {

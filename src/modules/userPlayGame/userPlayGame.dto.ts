@@ -39,5 +39,5 @@ export class UserPlayGameFullDto {
   avatar: string;
 
   @IsString()
-  avatarGold: string;
+  avatargold: string;
 }
