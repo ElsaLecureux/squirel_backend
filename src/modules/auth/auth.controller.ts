@@ -62,4 +62,17 @@ export class AuthController {
   async signUp(@Body(ValidationPipe) createUserDto: CreateUserDto): Promise<{ access_token }> {
     return await this.authService.signUp(createUserDto);
   }
+
+  @Post('signout')
+  @HttpCode(HttpStatus.OK)
+  async signOut(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie('token', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      path: '/',
+    });
+
+    return { message: 'Successfully signed out' };
+  }
 }
