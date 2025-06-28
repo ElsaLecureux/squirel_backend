@@ -7,16 +7,19 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { GamePlayDto } from './gamePlay.dto';
 import { GamePlayService } from './gamePlay.service';
+import { AuthGuard } from 'src/shared/guards/auth.guard';
 
 @Controller('/gamePlay')
 export class GamePlayController {
   constructor(private readonly gamePlayService: GamePlayService) {}
   @Get('/:id')
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: 200, description: 'The game play has been successfully loaded' })
   async getGamePlay(@Param('id', ParseIntPipe) userId: number): Promise<GamePlayDto> | null {
