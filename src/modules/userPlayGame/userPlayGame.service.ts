@@ -17,7 +17,7 @@ export class UserPlayGameService {
 
   async getUserGamesWon(userId: number): Promise<UserPlayGameFullDto> {
     const infos = await this.dataSource.query(
-      `SELECT userplaygame.userId, userplaygame.gameId, userplaygame.numberOfTimeWon, game.name, encode(lo_get(game.avatar), 'base64') AS avatar_base64, encode(lo_get(game.avatarGold), 'base64') AS avatarGold_base64 FROM userplaygame INNER JOIN game ON userplaygame.gameId = game.id WHERE userId=$1 `,
+      `SELECT userplaygame.userId, userplaygame.gameId, userplaygame.numberOfTimeWon, game.name, encode(lo_get(game.avatar), 'base64') AS avatar_base64, encode(lo_get(game.avatargold), 'base64') AS avatargold_base64 FROM userplaygame INNER JOIN game ON userplaygame.gameId = game.id WHERE userId=$1 `,
       [userId],
     );
     if (infos.length === 0) {
@@ -25,7 +25,7 @@ export class UserPlayGameService {
     }
     const datas = infos.map((gameData) => {
       gameData.avatar = `data:image/png;base64,${gameData.avatar_base64}`;
-      gameData.avatarGold = `data:image/png;base64,${gameData.avatargold_base64}`;
+      gameData.avatargold = `data:image/png;base64,${gameData.avatargold_base64}`;
       delete gameData.avatar_base64;
       delete gameData.avatargold_base64;
       return gameData;

@@ -1,4 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Response, Request } from 'express';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signIn.dto';
@@ -13,10 +16,25 @@ describe('AuthController', () => {
     signUp: jest.fn(),
   };
 
+  const mockJwtService = {
+    sign: jest.fn(),
+    verify: jest.fn(),
+    signAsync: jest.fn(),
+    verifyAsync: jest.fn(),
+  };
+
+  const mockConfigService = {
+    get: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [{ provide: AuthService, useValue: mockAuthService }],
+      providers: [
+        { provide: AuthService, useValue: mockAuthService },
+        { provide: JwtService, useValue: mockJwtService },
+        { provide: ConfigService, useValue: mockConfigService },
+      ],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
@@ -28,14 +46,65 @@ describe('AuthController', () => {
   });
 
   describe('signIn', () => {
-    it('should return access token on successful sign in', async () => {
+    it('should return access token and message for mobile platform', async () => {
       const signInDto: SignInDto = { username: 'test@example.com', password: 'password123' };
-      const result = { access_token: 'mockToken' };
+      const serviceResult = { access_token: 'mockToken' };
 
-      jest.spyOn(authService, 'signIn').mockResolvedValue(result);
+      // Mock the service method
+      mockAuthService.signIn.mockResolvedValue(serviceResult);
 
-      expect(await controller.signIn(signInDto)).toEqual(result);
+      // Mock Response object
+      const mockRes = {
+        cookie: jest.fn(),
+      } as unknown as Response;
+
+      // Mock Request object with mobile header
+      const mockReq = {
+        headers: {
+          'x-client-platform': 'mobile',
+        },
+      } as unknown as Request;
+
+      const result = await controller.signIn(signInDto, mockRes, mockReq);
+
+      expect(result).toEqual({
+        access_token: 'mockToken',
+        message: 'Login successful',
+      });
       expect(authService.signIn).toHaveBeenCalledWith(signInDto);
+      expect(mockRes.cookie).toHaveBeenCalledWith('token', 'mockToken', {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+        maxAge: 2 * 60 * 60 * 1000,
+      });
+    });
+
+    it('should return only message for web platform', async () => {
+      const signInDto: SignInDto = { username: 'test@example.com', password: 'password123' };
+      const serviceResult = { access_token: 'mockToken' };
+
+      mockAuthService.signIn.mockResolvedValue(serviceResult);
+
+      const mockRes = {
+        cookie: jest.fn(),
+      } as unknown as Response;
+
+      // Mock Request object without mobile header (web platform)
+      const mockReq = {
+        headers: {},
+      } as unknown as Request;
+
+      const result = await controller.signIn(signInDto, mockRes, mockReq);
+
+      expect(result).toEqual({ message: 'Login sucessful' });
+      expect(authService.signIn).toHaveBeenCalledWith(signInDto);
+      expect(mockRes.cookie).toHaveBeenCalledWith('token', 'mockToken', {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+        maxAge: 2 * 60 * 60 * 1000,
+      });
     });
   });
 

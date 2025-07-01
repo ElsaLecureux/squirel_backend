@@ -35,7 +35,7 @@ export class Init1747237044306 implements MigrationInterface {
     const gameTableExists = await queryRunner.hasTable('game');
     if (!gameTableExists) {
       await queryRunner.query(`
-        CREATE TABLE "game" ("id" SERIAL PRIMARY KEY, "name" varchar(25) NOT NULL, "avatar" OID NULL, "avatarGold" OID NULL)`);
+        CREATE TABLE "game" ("id" SERIAL PRIMARY KEY, "name" varchar(25) NOT NULL, "avatar" OID NULL, "avatargold" OID NULL)`);
     }
     const userPlayGameTableExists = await queryRunner.hasTable('user_play_game');
     if (!userPlayGameTableExists) {
