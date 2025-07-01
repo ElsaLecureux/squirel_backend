@@ -12,14 +12,6 @@ export class UserPlayGameDto {
   @IsNumber()
   @IsNotEmpty({ message: Errors.MISSING_REQUIRED_FIELD })
   gameId: number;
-
-  @ApiProperty()
-  @IsNumber()
-  numberOfTimeWon: number;
-
-  @ApiProperty()
-  @IsString()
-  name: string;
 }
 
 export class UserPlayGameFullDto {

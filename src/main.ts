@@ -10,8 +10,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const allowedOrigins = [
     'http://localhost:8081',
-    'http://10.179.7.13:8081',
+    'http://192.168.1.112:8081',
     'https://squirelproject.netlify.app',
+    null,
   ];
 
   app.enableCors({
