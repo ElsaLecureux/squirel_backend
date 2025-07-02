@@ -24,6 +24,8 @@ async function bootstrap() {
       }
     },
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   });
   app.use(cookieParser());
   app.use(
