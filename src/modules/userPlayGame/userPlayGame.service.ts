@@ -38,12 +38,6 @@ export class UserPlayGameService {
     const gameId = userPlayGameDto.gameId;
     try {
       let infos = [];
-      // infos = await this.userPlayGameRepository.find({
-      //   where: {
-      //     user: userId,
-      //     game: gameId,
-      //   },
-      // });
       infos = await this.dataSource.query(
         `SELECT * FROM userplaygame WHERE userId=$1 AND gameId=$2`,
         [userId, gameId],
