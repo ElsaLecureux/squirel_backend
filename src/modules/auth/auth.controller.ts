@@ -16,9 +16,13 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 import { AuthGuard } from '../../shared/guards/auth.guard';
+import { ConfigService } from '@nestjs/config';
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Get('me')
   @UseGuards(AuthGuard)
@@ -39,10 +43,13 @@ export class AuthController {
     @Req() req: Request,
   ): Promise<any> {
     const { access_token } = await this.authService.signIn(signInDto);
+
+    const isProduction = this.configService.get('NODE_ENV') === 'production';
+
     res.cookie('token', access_token, {
       httpOnly: true,
-      secure: false, // change to true in prod
-      sameSite: 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: 2 * 60 * 60 * 1000,
     });
     const isMobile = req.headers['x-client-platform'] === 'mobile';
