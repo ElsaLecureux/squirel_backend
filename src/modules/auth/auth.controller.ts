@@ -49,7 +49,7 @@ export class AuthController {
     res.cookie('token', access_token, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
+      sameSite: 'strict',
       maxAge: 2 * 60 * 60 * 1000,
     });
     const isMobile = req.headers['x-client-platform'] === 'mobile';
