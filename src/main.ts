@@ -11,7 +11,7 @@ async function bootstrap() {
   const allowedOrigins = [
     'http://localhost:8081',
     'http://192.168.1.112:8081',
-    'https://squirelproject.netlify.app',
+    'https://squirel.de',
     null,
   ];
 
