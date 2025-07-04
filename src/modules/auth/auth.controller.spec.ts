@@ -75,7 +75,7 @@ describe('AuthController', () => {
       expect(mockRes.cookie).toHaveBeenCalledWith('token', 'mockToken', {
         httpOnly: true,
         secure: false,
-        sameSite: 'lax',
+        sameSite: 'strict',
         maxAge: 2 * 60 * 60 * 1000,
       });
     });

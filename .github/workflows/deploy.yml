@@ -102,3 +102,7 @@ jobs:
             # run migration to create/update tables
             docker exec squirel_backend npm run typeorm migration:run
             echo "Deployment completed!"
+
+            # recreated connection between caddy and backend and restart caddy
+            docker network connect app-network squirel_backend
+            docker restart caddy
